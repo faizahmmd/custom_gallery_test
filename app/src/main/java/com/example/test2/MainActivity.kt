@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import me.rail.customgallery.main.PermissionActivity
+import me.rail.customgallery.models.Media
 
 
 class MainActivity : AppCompatActivity() {
@@ -29,8 +30,8 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if(requestCode == 0){
             if(resultCode == Activity.RESULT_OK){
-                var data = data?.getSerializableExtra("Data")
-                println("PPPPPPPPPPPPPPPPPPPPPPPPPPPP$data")
+                var data: ArrayList<Media> = data?.getSerializableExtra("Data") as ArrayList<Media>
+                println("PPPPPPPPPPPPPPPPPPPPPPPPPPPP${data[0].uri}")
             }
         }
     }
