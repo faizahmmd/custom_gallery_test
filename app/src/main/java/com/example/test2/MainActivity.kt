@@ -83,6 +83,8 @@ class MainActivity : AppCompatActivity() {
     private fun shareSelectedItems(uriArray: ArrayList<Uri>) {
         val intent = Intent(Intent.ACTION_SEND_MULTIPLE)
         intent.putExtra(Intent.EXTRA_STREAM, uriArray)
+        intent.type = "image/*"
+        intent.type = "video/*"
         startActivity(Intent.createChooser(intent, "Share Via"))
     }
 }
