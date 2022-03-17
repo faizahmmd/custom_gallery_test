@@ -45,22 +45,23 @@ class PermissionActivity() : AppCompatActivity() {
     private var permissionGrantedCamera: Boolean = false
     private lateinit var takePhoto: ActivityResultLauncher<Void?>
     private lateinit var takeVideo: ActivityResultLauncher<Uri?>
-    private var addVideoGallery: Boolean = false
+    private var addVideoGallery: Boolean = true
+    private var addImageGallery: Boolean = true
     var multipleSelection: Boolean = true
     var selectionLimit: Boolean = true
-    var selectionLimitCount: Int?=null
+    var selectionLimitCount: Int = 5
 
 
     @Inject
     lateinit var navigator: Navigator
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        addVideoGallery = intent.getBooleanExtra("addVideoGallery", false)
-        selectionLimit = intent.getBooleanExtra("selectionLimitOn", true)
-        selectionLimitCount = intent.getIntExtra("selectionLimitCount", 5)
-        multipleSelection = intent.getBooleanExtra("multipleSelection", true)
+        addVideoGallery = intent.getBooleanExtra("addVideoGallery", addVideoGallery)
+        addImageGallery = intent.getBooleanExtra("addImageGallery", addImageGallery)
+        selectionLimit = intent.getBooleanExtra("selectionLimitOn", selectionLimit)
+        selectionLimitCount = intent.getIntExtra("selectionLimitCount", selectionLimitCount)
+        multipleSelection = intent.getBooleanExtra("multipleSelection", multipleSelection)
         binding = DataBindingUtil.setContentView(this, R.layout.permission_activity)
-
         supportActionBar?.hide()
         binding.button3.visibility = View.INVISIBLE
         activityResultLauncherPermissionRequest =
@@ -145,11 +146,14 @@ class PermissionActivity() : AppCompatActivity() {
 
     private suspend fun showMedia() {
         val job = CoroutineScope(Dispatchers.IO).launch {
-            val mediaHandler = DataHandler(addVideoGallery)
+            val mediaHandler = DataHandler(addVideoGallery, addImageGallery)
             mediaHandler.findMedia(applicationContext)
         }
         job.join()
-        navigator.replaceFragment(R.id.container, AlbumListFragment(addVideoGallery))
+        navigator.replaceFragment(
+            R.id.container,
+            AlbumListFragment(addVideoGallery, addImageGallery)
+        )
     }
 
     private fun quitApp() {
@@ -192,7 +196,7 @@ class PermissionActivity() : AppCompatActivity() {
 
     }
 
-    private fun captureVideo() {
+    fun captureVideo() {
         var mUri: Uri? = null
         takeVideo.launch(mUri)
     }
@@ -259,8 +263,8 @@ class PermissionActivity() : AppCompatActivity() {
     override fun onBackPressed() {
         DataStorage.setAllMediasUnselected()
         binding.button3.visibility = View.INVISIBLE
-        binding.text.text ="Gallery"
-            super.onBackPressed()
+        binding.text.text = "Gallery"
+        super.onBackPressed()
     }
 
     fun hideTickOnToolBar() {
@@ -273,10 +277,10 @@ class PermissionActivity() : AppCompatActivity() {
 
     fun updateCountValueInToolBar() {
         var count = DataStorage.getSelectedMedias().size
-      if(selectionLimit && selectionLimitCount!=null){
-          binding.text.text = "$count/$selectionLimitCount"
-      }else{
-          binding.text.text = count.toString()
-      }
+        if (selectionLimit && selectionLimitCount != null) {
+            binding.text.text = "$count/$selectionLimitCount"
+        } else {
+            binding.text.text = count.toString()
+        }
     }
 }

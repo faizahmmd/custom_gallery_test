@@ -5,7 +5,8 @@ import android.os.Parcel
 import android.os.Parcelable
 import java.io.Serializable
 
-open class Media(open val uri: Uri?, open val name: String?, open var selected: Boolean? = false): Serializable, Parcelable {
+open class Media(open val uri: Uri?, open val name: String?, open var selected: Boolean? = false): Serializable,
+    Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readParcelable(Uri::class.java.classLoader),
         parcel.readString(),

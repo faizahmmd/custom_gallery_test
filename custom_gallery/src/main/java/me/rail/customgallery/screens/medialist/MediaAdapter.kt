@@ -55,6 +55,7 @@ class MediaAdapter(
         }
         holder.binding.image.setOnClickListener {
             context.showTickOnToolBar()
+
             if (checkboxVisible && context.multipleSelection) {
                 if (holder.binding.checkBox.isChecked) {
                     holder.binding.checkBox.isChecked = false
@@ -68,6 +69,9 @@ class MediaAdapter(
                             Toast.makeText(context, "Maximum selection reached", Toast.LENGTH_SHORT)
                                 .show()
                         }
+                    } else {
+                        holder.binding.checkBox.isChecked = true
+                        medias[position].selected = true
                     }
                 }
                 context.updateCountValueInToolBar()
@@ -86,8 +90,7 @@ class MediaAdapter(
                 }
             }
             println(
-                "XXXXXXXXXXXXXXXXXXXXXXX" + DataStorage.getSelectedMedias()
-                    .toString() + "XXXXXXXXXXXXXXXXXXXXXXXXXX"
+                "<-------------${DataStorage.getSelectedMedias()}---------->"
             )
         }
 
@@ -102,8 +105,17 @@ class MediaAdapter(
             if (context.selectionLimit && context.selectionLimitCount != null) {
                 if (DataStorage.getSelectedMedias().size < context.selectionLimitCount!!) {
                     medias[position].selected = holder.binding.checkBox.isChecked
+                } else {
+                    Toast.makeText(context, "Maximum selection reached", Toast.LENGTH_SHORT)
+                        .show()
                 }
+            } else {
+                medias[position].selected = holder.binding.checkBox.isChecked
             }
+            context.updateCountValueInToolBar()
+            println(
+                "<-------------${DataStorage.getSelectedMedias()}---------->"
+            )
         }
     }
 
