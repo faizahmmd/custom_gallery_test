@@ -54,16 +54,21 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 0) {
             if (resultCode == Activity.RESULT_OK) {
-                var data: ArrayList<Media> = data?.getSerializableExtra("Data") as ArrayList<Media>
-                if (data.isNotEmpty() && data[0] is Image) {
-                    imageView.setImageURI(data[0].uri)
-                } else if (data.isNotEmpty() && data[0] is Video) {
-                    var video: Video = data[0] as Video
-                    imageView.setImageBitmap(video.thumbnail)
+                try{
+                    var data: ArrayList<Media> = data?.getSerializableExtra("Data") as ArrayList<Media>
+                    if (data.isNotEmpty() && data[0] is Image) {
+                        imageView.setImageURI(data[0].uri)
+                    } else if (data.isNotEmpty() && data[0] is Video) {
+                        var video: Video = data[0] as Video
+                        imageView.setImageURI(video.thumbnail)
+                    }
+                    setReceivedDataHere(data)
+                    println("<----------$data--------->")
+                    println("<----------${data.size}--------->")
                 }
-                setReceivedDataHere(data)
-                println("<----------$data--------->")
-                println("<----------${data.size}--------->")
+                catch (e: Exception) {
+                    println("<----------$e-------->")
+                }
             }
         }
     }
