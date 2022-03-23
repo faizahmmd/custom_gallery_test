@@ -20,5 +20,5 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "test2"
-include ':app', ':customgallery'
-project(':customgallery').projectDir = new File('customgallery')
+include ':app', ':custom_gallery'
+project(':custom_gallery').projectDir = new File('custom_gallery')
